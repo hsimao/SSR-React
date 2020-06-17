@@ -14,11 +14,15 @@ export default (req, store) => {
     </Provider>
   )
 
+  // 將 server 中的 store 狀態轉成字串保存到 window.INITIAL_STATE 內
   return `
     <html>
       <head></head>
       <body>
         <div id="root">${content}</div>
+        <script>
+          window.INITIAL_STATE = ${JSON.stringify(store.getState())}
+        </script>
         <script src="bundle.js"></script>
       </body>
     </html>

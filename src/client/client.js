@@ -10,7 +10,8 @@ import { renderRoutes } from 'react-router-config'
 import Routes from './Routes'
 import reducers from './reducers'
 
-const store = createStore(reducers, {}, applyMiddleware(thunk))
+// 將 server 保存的狀態注入 store 內
+const store = createStore(reducers, window.INITIAL_STATE, applyMiddleware(thunk))
 
 ReactDOM.hydrate(
   <Provider store={store}>
