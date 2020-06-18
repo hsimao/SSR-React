@@ -18,7 +18,9 @@ export default (req, store) => {
   // 將 server 中的 store 狀態轉成字串保存到 window.INITIAL_STATE 內
   return `
     <html>
-      <head></head>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      </head>
       <body>
         <div id="root">${content}</div>
         <script>
