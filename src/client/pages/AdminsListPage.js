@@ -14,13 +14,19 @@ class AdminsListPage extends Component {
     })
   }
 
+  head() {
+    return (
+      <Helmet>
+        <title>Admins Page</title>
+        <meta property='og:title' content='Admins Page' />
+      </Helmet>
+    )
+  }
+
   render() {
     return (
       <div>
-        <Helmet>
-          <title>Admins Page</title>
-          <meta property='og:title' content='Admins Page' />
-        </Helmet>
+        {this.head()}
         <h3>Protected list of admins</h3>
         <ul>{this.renderAdmins()}</ul>
       </div>
