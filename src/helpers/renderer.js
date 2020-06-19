@@ -4,6 +4,7 @@ import { StaticRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { renderRoutes } from 'react-router-config'
 import serialize from 'serialize-javascript'
+import { Helmet } from 'react-helmet'
 import Routes from '../client/Routes'
 
 export default (req, store, context) => {
@@ -15,10 +16,15 @@ export default (req, store, context) => {
     </Provider>
   )
 
+  // SEO meta
+  const helmet = Helmet.renderStatic()
+
   // 將 server 中的 store 狀態轉成字串保存到 window.INITIAL_STATE 內
   return `
     <html>
       <head>
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
       </head>
       <body>
