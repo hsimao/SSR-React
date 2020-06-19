@@ -23,19 +23,38 @@ app.use(express.static('public'))
 app.get('*', (req, res) => {
   const store = createStore(req)
 
-  const promises = matchRoutes(Routes, req.path).map(({ route }) => {
-    return route.loadData ? route.loadData(store) : null
-  })
+  const promises = matchRoutes(Routes, req.path)
+    .map(({ route }) => {
+      return route.loadData ? route.loadData(store) : null
+    })
+    .map(promise => {
+      if (promise) {
+        return new Promise((resolve, reject) => {
+          promise.then(resolve).catch(resolve)
+        })
+      }
+    })
 
-  Promise.all(promises).then(() => {
-    const context = {}
+  Promise.all(promises)
+    .then(() => {
+      const context = {}
 
-    const content = renderer(req, store, context)
+      const content = renderer(req, store, context)
 
-    if (context.notFound) res.status(404)
+      // 如果有需驗證的頁面, 不可訪問需要重新導向, context 內會有參數, server side 需使用以下方式重新導向
+      // 不然後端將會直接返回渲染完的頁面, 在瀏覽器端時 js 才會重新導頁, 會有瞬間閃跳情況
+      // 若這時瀏覽器有關掉 js, 用戶就不會重新導向
+      if (context.url) {
+        return res.redirect(301, context.url)
+      }
 
-    res.send(content)
-  })
+      if (context.notFound) res.status(404)
+
+      res.send(content)
+    })
+    .catch(() => {
+      res.send('Something went wrong')
+    })
 })
 
 app.listen(3000, () => {
